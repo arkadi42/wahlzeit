@@ -9,6 +9,9 @@ import org.wahlzeit.utils.*;
 public class Location {
     protected Coordinate coordinate;
 
+    public Location() {
+        this.coordinate = new Coordinate();
+    }
 
     public void readFrom(ResultSet rset) throws SQLException {
         coordinate.readFrom(rset);

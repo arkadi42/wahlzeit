@@ -152,6 +152,7 @@ public class Photo extends DataObject {
 
 		maxPhotoSize = PhotoSize.getFromWidthHeight(width, height);
 
+		location = new Location();
 		location.readFrom(rset);
 
 
@@ -176,6 +177,7 @@ public class Photo extends DataObject {
 		rset.updateInt("no_votes", noVotes);
 		rset.updateLong("creation_time", creationTime);
 
+		location = new Location();
 		location.writeOn(rset);
 	}
 
