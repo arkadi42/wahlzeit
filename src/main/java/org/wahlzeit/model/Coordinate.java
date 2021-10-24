@@ -7,9 +7,9 @@ import org.wahlzeit.services.*;
 import org.wahlzeit.utils.*;
 
 public class Coordinate extends DataObject {
-    private double x;
-    private double y;
-    private double z;
+    private double x;       //x Coordinate
+    private double y;       //y Coordinate
+    private double z;       //z Coordinate
 
     @Override
     public String getIdAsString() {
