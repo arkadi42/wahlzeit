@@ -11,6 +11,55 @@ public class Coordinate extends DataObject {
     private double y;       //y Coordinate
     private double z;       //z Coordinate
 
+    public Coordinate(double x, double y, double z){
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+    public Coordinate(){
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+    }
+
+    public void setX(double x){
+        this.x = x;
+    }
+    public void setY(double y){
+        this.y = y;
+    }
+    public void setZ(double z){
+        this.z = z;
+    }
+
+    public double getX(){
+        return this.x;
+    }
+    public double getY(){
+        return this.y;
+    }
+    public double getZ(){
+        return this.z;
+    }
+
+    public boolean isEqual(Coordinate c) {
+        return((this == c) || (getDistance(c) == 0));
+    }
+
+    @Override
+    public boolean equals(Object c){
+        if(c instanceof  Coordinate){
+            return isEqual((Coordinate) c);
+        }
+        return false;
+    }
+
+    public double getDistance(Coordinate c){
+        double dx = c.x - this.x;
+        double dy = c.y - this.y;
+        double dz = c.z - this.z;
+        return Math.sqrt((dx*dx) + (dy*dy) + (dz*dz));
+    }
     @Override
     public String getIdAsString() {
         return null;

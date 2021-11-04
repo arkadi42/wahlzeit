@@ -13,6 +13,10 @@ public class Location {
         this.coordinate = new Coordinate();
     }
 
+    public Location(Coordinate c){
+        this.coordinate = c;
+    }
+
     public void readFrom(ResultSet rset) throws SQLException {
         coordinate.readFrom(rset);
     }
