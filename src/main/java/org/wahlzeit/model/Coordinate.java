@@ -2,11 +2,14 @@ package org.wahlzeit.model;
 
 import java.sql.*;
 import java.net.*;
+import java.util.Objects;
 
 import org.wahlzeit.services.*;
 import org.wahlzeit.utils.*;
 
 public class Coordinate extends DataObject {
+    private final static double EPSILON = 0.01;         //max distance that 2 Coordinates can have and still be "equal"
+
     private double x;       //x Coordinate
     private double y;       //y Coordinate
     private double z;       //z Coordinate
@@ -42,8 +45,12 @@ public class Coordinate extends DataObject {
         return this.z;
     }
 
+    @Override
+    public int hashCode(){
+        return Objects.hash(x, y, z);
+    }
     public boolean isEqual(Coordinate c) {
-        return((this == c) || (getDistance(c) == 0));
+        return((this == c) || (getDistance(c) < EPSILON));
     }
 
     @Override

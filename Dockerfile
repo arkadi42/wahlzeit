@@ -7,8 +7,8 @@ WORKDIR /builder
 
 # Copy Gradle file
 COPY *.gradle /builder/
-
 # Copy sources
+
 COPY src /builder/src
 
 # Copy Gradle resources

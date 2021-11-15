@@ -59,22 +59,22 @@ public class PhotoFactory {
 	/**
 	 * @methodtype factory
 	 */
-	public Photo createPhoto() {
-		return new Photo();
+	public ConsolePhoto createPhoto() {
+		return new ConsolePhoto();
 	}
 	
 	/**
 	 * 
 	 */
-	public Photo createPhoto(PhotoId id) {
-		return new Photo(id);
+	public ConsolePhoto createPhoto(PhotoId id) {
+		return new ConsolePhoto(id);
 	}
 	
 	/**
 	 * 
 	 */
-	public Photo createPhoto(ResultSet rs) throws SQLException {
-		return new Photo(rs);
+	public ConsolePhoto createPhoto(ResultSet rs) throws SQLException {
+		return new ConsolePhoto(rs);
 	}
 	
 	/**
