@@ -25,11 +25,4 @@ public class PhotoTest {
         return;
     }
 
-    @Test
-    public void testConsolePhoto(){
-        assertTrue(PhotoFactory.getInstance().createPhoto() instanceof ConsolePhoto);
-        return;
-    }
-
-
 }
