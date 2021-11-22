@@ -7,13 +7,13 @@ import org.wahlzeit.services.*;
 import org.wahlzeit.utils.*;
 
 public class Location {
-    protected Coordinate coordinate;
+    protected CartesianCoordinate coordinate;
 
     public Location() {
-        this.coordinate = new Coordinate();
+        this.coordinate = new CartesianCoordinate();
     }
 
-    public Location(Coordinate c){
+    public Location(CartesianCoordinate c){
         this.coordinate = c;
     }
 
