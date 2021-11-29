@@ -7,12 +7,11 @@ import java.util.Objects;
 import org.wahlzeit.services.*;
 import org.wahlzeit.utils.*;
 
-public class CartesianCoordinate extends DataObject implements Coordinate{
-    private final static double EPSILON = 0.01;         //max distance that 2 Coordinates can have and still be "equal"
-
-    private double x;       //x Coordinate
-    private double y;       //y Coordinate
-    private double z;       //z Coordinate
+public class CartesianCoordinate extends AbstractCoordinate{
+    //Cartesian
+    private double x;
+    private double y;
+    private double z;
 
     public CartesianCoordinate(double x, double y, double z){
         this.x = x;
@@ -25,14 +24,14 @@ public class CartesianCoordinate extends DataObject implements Coordinate{
         this.z = 0;
     }
 
+    //Getter und Setter
     public void setX(double x){
         this.x = x;
     }
     public void setY(double y){
         this.y = y;
     }
-    public void setZ(double z){
-        this.z = z;
+    public void setZ(double z){  this.z = z;
     }
 
     public double getX(){
@@ -45,14 +44,13 @@ public class CartesianCoordinate extends DataObject implements Coordinate{
         return this.z;
     }
 
+    public double getPhi() {return this.asSphericCoordinate().getPhi();  }
+    public double getTheta() {return this.asSphericCoordinate().getTheta(); }
+    public double getRadius() {return this.asSphericCoordinate().getRadius();}
+
     @Override
     public CartesianCoordinate asCartesianCoordinate() {
         return this;
-    }
-
-    @Override
-    public double getCartesianDistance(Coordinate c) {
-        return this.getDistance(c.asCartesianCoordinate());
     }
 
     @Override
@@ -60,19 +58,14 @@ public class CartesianCoordinate extends DataObject implements Coordinate{
         double radius = Math.sqrt(x*x + y*y + z*z);
         double theta = Math.acos(z / radius);
         double phi = Math.atan2(y, x);
-
-
         return new SphericCoordinate(phi, theta, radius);
     }
 
-    @Override
-    public double getCentralAngle(Coordinate c) {
-        SphericCoordinate sc = c.asSphericCoordinate();
-        return getCentralAngle(sc);
-    }
+    public void readFrom(ResultSet rset) throws SQLException {
 
-    public boolean isEqual(Coordinate c) {
-        return((this == c) || (getCartesianDistance(c) < EPSILON));
+        this.setX(rset.getDouble("x"));
+        this.setY(rset.getDouble("y"));
+        this.setZ(rset.getDouble("z"));
     }
 
     @Override
@@ -88,35 +81,4 @@ public class CartesianCoordinate extends DataObject implements Coordinate{
         return Objects.hash(x, y, z);
     }
 
-    public double getDistance(CartesianCoordinate c){
-        double dx = c.x - this.x;
-        double dy = c.y - this.y;
-        double dz = c.z - this.z;
-        return Math.sqrt((dx*dx) + (dy*dy) + (dz*dz));
-    }
-    @Override
-    public String getIdAsString() {
-        return null;
-    }
-
-    @Override
-    public void readFrom(ResultSet rset) throws SQLException {
-        setX(rset.getDouble("x"));
-        setY(rset.getDouble("y"));
-        setY(rset.getDouble("z"));
-    }
-
-    @Override
-    public void writeOn(ResultSet rset) throws SQLException {
-        rset.updateDouble("x", x);
-        rset.updateDouble("y", y);
-        rset.updateDouble("z", z);
-
-
-    }
-
-    @Override
-    public void writeId(PreparedStatement stmt, int pos) throws SQLException {
-
-    }
 }

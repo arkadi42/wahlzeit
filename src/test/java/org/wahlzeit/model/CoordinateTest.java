@@ -32,6 +32,6 @@ public class CoordinateTest {
         assertTrue(!c3.isEqual(c4));
         assertTrue(c3.equals(c3));
 
-        assertEquals(c4.getDistance(c3), 8.660254, 1e-3 );
+        assertEquals(c4.getCartesianDistance(c3), 8.660254, 1e-3 );
     }
 }
