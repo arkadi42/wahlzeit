@@ -13,9 +13,9 @@ public class CoordinateTest {
     @Test
     public void testConstructors() {
         CartesianCoordinate c1 = new CartesianCoordinate();
-        assert(c1.getX() == 0);
-        assert(c1.getY() == 0);
-        assert(c1.getZ() == 0);
+        assert(c1.getX() == 1);
+        assert(c1.getY() == 1);
+        assert(c1.getZ() == 1);
 
         CartesianCoordinate c2 = new CartesianCoordinate(4, -10, 1);
         assert(c2.getX() == 4);
