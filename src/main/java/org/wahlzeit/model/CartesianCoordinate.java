@@ -19,9 +19,9 @@ public class CartesianCoordinate extends AbstractCoordinate{
         this.z = z;
     }
     public CartesianCoordinate(){
-        this.x = 0;
-        this.y = 0;
-        this.z = 0;
+        this.x = 1;
+        this.y = 1;
+        this.z = 1;
     }
 
     //Getter und Setter
@@ -48,33 +48,67 @@ public class CartesianCoordinate extends AbstractCoordinate{
     public double getTheta() {return this.asSphericCoordinate().getTheta(); }
     public double getRadius() {return this.asSphericCoordinate().getRadius();}
 
+    //every set of doubles (x,y,z) is a valid class object execpt (0,0,0)
+    public boolean assertClassInvariants() {
+        if(x == 0 && y == 0 && z == 0) return false;
+        return true;
+    }
+
     @Override
     public CartesianCoordinate asCartesianCoordinate() {
+        assert assertClassInvariants();
         return this;
     }
 
     @Override
     public SphericCoordinate asSphericCoordinate() {
+        //Precondition
+        assert  assertClassInvariants();
+
         double radius = Math.sqrt(x*x + y*y + z*z);
         double theta = Math.acos(z / radius);
         double phi = Math.atan2(y, x);
-        return new SphericCoordinate(phi, theta, radius);
+        SphericCoordinate sp = new SphericCoordinate(phi, theta, radius);
+
+        //Postcondition, ClassInvaritants
+        assert sp.assertClassInvariants();
+        return sp;
     }
 
-    public void readFrom(ResultSet rset) throws SQLException {
+    //returns the cartesian distance to a coordinate
+    public double getCartesianDistance(Coordinate c){
+        //Precondition
+        assert (c != null);
+        assert c.assertClassInvariants();
+
+        CartesianCoordinate cc0 = this.asCartesianCoordinate();
+        CartesianCoordinate cc1 = c.asCartesianCoordinate();
+
+        double dx = cc1.getX() - cc0.getX();
+        double dy = cc1.getY() - cc0.getY();
+        double dz = cc1.getZ() - cc0.getZ();
+
+        double result = Math.sqrt((dx*dx) + (dy*dy) + (dz*dz));
+
+        //Postcondition
+        assert (result >= 0);
+
+        return result;
+    }
+
+    public void readFrom(ResultSet rset) throws SQLException,IllegalArgumentException {
+        //Precondition
+        if(rset == null) throw new IllegalArgumentException();
+
 
         this.setX(rset.getDouble("x"));
         this.setY(rset.getDouble("y"));
-        this.setZ(rset.getDouble("z"));
+
+        //Postcondition, Classinvariant
+        assert assertClassInvariants();
     }
 
-    @Override
-    public boolean equals(Object c){
-        if(c instanceof  CartesianCoordinate){
-            return isEqual((CartesianCoordinate) c);
-        }
-        return false;
-    }
+
 
     @Override
     public int hashCode(){

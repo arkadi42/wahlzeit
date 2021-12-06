@@ -6,5 +6,6 @@ public interface Coordinate {
     SphericCoordinate asSphericCoordinate();
     double getCentralAngle(Coordinate c);
     boolean isEqual(Coordinate c);
+    boolean assertClassInvariants();
 
 }
