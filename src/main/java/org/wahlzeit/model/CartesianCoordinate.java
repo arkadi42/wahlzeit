@@ -44,42 +44,72 @@ public class CartesianCoordinate extends AbstractCoordinate{
         return this.z;
     }
 
-    public double getPhi() {return this.asSphericCoordinate().getPhi();  }
-    public double getTheta() {return this.asSphericCoordinate().getTheta(); }
-    public double getRadius() {return this.asSphericCoordinate().getRadius();}
 
     //every set of doubles (x,y,z) is a valid class object execpt (0,0,0)
-    public boolean assertClassInvariants() {
-        if(x == 0 && y == 0 && z == 0) return false;
-        return true;
+    public void assertClassInvariants() throws IllegalArgumentException {
+        if(x == 0 && y == 0 && z == 0) {
+            throw new IllegalArgumentException("(0,0,0) is not a valid coordinate. ");
+        };
     }
 
     @Override
     public CartesianCoordinate asCartesianCoordinate() {
-        assert assertClassInvariants();
+        try{
+            assertClassInvariants();
+        }
+        catch (IllegalArgumentException e){
+            setX(1.0);
+            System.err.println("IllegalArgumentException: " + e.getMessage() + "Coordinate has been set to (1,0,0).");
+        }
         return this;
     }
 
     @Override
-    public SphericCoordinate asSphericCoordinate() {
-        //Precondition
-        assert  assertClassInvariants();
+    public SphericCoordinate asSphericCoordinate() throws ArithmeticException{
+        SphericCoordinate sp = new SphericCoordinate();
 
-        double radius = Math.sqrt(x*x + y*y + z*z);
-        double theta = Math.acos(z / radius);
-        double phi = Math.atan2(y, x);
-        SphericCoordinate sp = new SphericCoordinate(phi, theta, radius);
+                //Precondition
+        try{
+            assertClassInvariants();
+        }
+        catch (IllegalArgumentException e){
+            setX(1.0);
+            System.err.println("IllegalArgumentException: " + e.getMessage() + "Coordinate has been set to (1,0,0).");
+        }
+
+
+        sp.setRadius(Math.sqrt(x*x + y*y + z*z));
+        sp.setTheta(Math.acos(z / sp.getRadius()));
+        sp.setPhi(Math.atan2(y, x));
+
 
         //Postcondition, ClassInvaritants
-        assert sp.assertClassInvariants();
+
+        try{
+            sp.assertClassInvariants();
+        }
+        catch (IllegalArgumentException e){
+            if(e.getMessage().equals("radius")){
+                sp.setRadius(1.0);
+                System.err.println("IllegalArgumentException: " + e.getMessage() + "Radius has been set to 1");
+            }
+            if(e.getMessage().equals("theta")){
+                sp.setTheta(1.0);
+                System.err.println("IllegalArgumentException: " + e.getMessage() + "theta has been set to 1");
+            }
+            if(e.getMessage().equals("phi")){
+                sp.setPhi(1.0);
+                System.err.println("IllegalArgumentException: " + e.getMessage() + "phi has been set to 1");
+            }
+        }
         return sp;
     }
 
     //returns the cartesian distance to a coordinate
-    public double getCartesianDistance(Coordinate c){
+    public double getCartesianDistance(Coordinate c) throws IllegalArgumentException{
         //Precondition
-        assert (c != null);
-        assert c.assertClassInvariants();
+        if(c == null) throw new IllegalArgumentException();
+        c.assertClassInvariants();
 
         CartesianCoordinate cc0 = this.asCartesianCoordinate();
         CartesianCoordinate cc1 = c.asCartesianCoordinate();
@@ -96,17 +126,18 @@ public class CartesianCoordinate extends AbstractCoordinate{
         return result;
     }
 
-    public void readFrom(ResultSet rset) throws SQLException,IllegalArgumentException {
+    public void readFrom(ResultSet rset) throws SQLException, IllegalArgumentException {
         //Precondition
         if(rset == null) throw new IllegalArgumentException();
 
-
         this.setX(rset.getDouble("x"));
         this.setY(rset.getDouble("y"));
-
+        this.setZ(rset.getDouble("z"));
         //Postcondition, Classinvariant
-        assert assertClassInvariants();
+        assertClassInvariants();
+
     }
+
 
 
 

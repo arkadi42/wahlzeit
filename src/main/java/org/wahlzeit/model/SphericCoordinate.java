@@ -29,35 +29,53 @@ public class SphericCoordinate extends AbstractCoordinate {
         this.radius = 1;
     }
 
-    //Getter und Setter
-    public double getX(){return this.asCartesianCoordinate().getX();}
-    public double getY(){return this.asCartesianCoordinate().getY();}
-    public double getZ(){return this.asCartesianCoordinate().getZ();}
-
     public double getPhi() {return phi;}
     public double getTheta() {return theta;}
     public double getRadius() {return radius;}
 
-    // This method should be always true after any method completes. Radius is limited to non negativ and non zero values
-    // Theta ranges from 0 to PI (180 deg) and Phi from -PI to PI (-180 to 180 deg)
-    public boolean assertClassInvariants(){
-        if (radius <= 0) return false;
-        else if (theta > Math.PI || theta < 0) return false;
-        else if (phi > Math.PI || phi < -Math.PI) return false;
-        else return true;
+
+    public void setPhi(double phi) throws IllegalArgumentException{
+        if(phi > Math.PI || phi < -Math.PI) throw new IllegalArgumentException("phi has to be between -Pi and Pi");
+        this.phi = phi;
+    }
+    public void setTheta(double theta) throws IllegalArgumentException{
+        if(theta > Math.PI || theta < 0) throw new IllegalArgumentException("theta has to be between 0 and Pi");
+        this.theta = theta;
+    }
+    public void setRadius(double radius) throws IllegalArgumentException{
+        if(radius <= 0) throw new IllegalArgumentException("radius of a sphere can not be <= 0");
+        this.radius = radius;
     }
 
-    public void setPhi(double phi) {this.phi = phi;}
-    public void setTheta(double theta) {this.theta = theta;}
-    public void setRadius(double radius) {
-        if(radius == 0) throw new IllegalArgumentException("radius of a sphere can not be 0");
-        this.radius = radius;
+
+    // This method should be always true after any method completes. Radius is limited to non negativ and non zero values
+    // Theta ranges from 0 to PI (180 deg) and Phi from -PI to PI (-180 to 180 deg)
+    public void assertClassInvariants() throws IllegalArgumentException{
+        if (radius <= 0) throw new IllegalArgumentException("radius");
+        else if (theta > Math.PI || theta < 0) throw new IllegalArgumentException("theta");
+        else if (phi > Math.PI || phi < -Math.PI) throw new IllegalArgumentException("phi");
     }
 
     @Override
     public CartesianCoordinate asCartesianCoordinate() {
         //Precondition
-        assert assertClassInvariants();
+        try{
+            assertClassInvariants();
+        }
+        catch (IllegalArgumentException e){
+            if(e.getMessage().equals("radius")){
+                setRadius(1.0);
+                System.err.println("IllegalArgumentException: " + e.getMessage() + "Radius has been set to 1");
+            }
+            if(e.getMessage().equals("theta")){
+                setTheta(1.0);
+                System.err.println("IllegalArgumentException: " + e.getMessage() + "theta has been set to 1");
+            }
+            if(e.getMessage().equals("phi")){
+                setPhi(1.0);
+                System.err.println("IllegalArgumentException: " + e.getMessage() + "phi has been set to 1");
+            }
+        }
 
         double x = radius * Math.sin(theta) * Math.cos(phi);
         double y = radius * Math.sin(theta) * Math.sin(phi);
@@ -66,23 +84,54 @@ public class SphericCoordinate extends AbstractCoordinate {
         CartesianCoordinate cc = new CartesianCoordinate(x, y, z);
 
         //Postcondition, ClassInvariant
-        assert  cc.assertClassInvariants();
+        try{
+            cc.assertClassInvariants();
+        }
+        catch (IllegalArgumentException e){
+            cc.setX(1.0);
+            System.err.println("IllegalArgumentException: " + e.getMessage() + "Coordinate has been set to (1,0,0).");
+        }
         return cc;
     }
 
     @Override
     public SphericCoordinate asSphericCoordinate() {
-        assert assertClassInvariants();
+        try{
+            assertClassInvariants();
+        }
+        catch (IllegalArgumentException e){
+            if(e.getMessage().equals("radius")){
+                setRadius(1.0);
+                System.err.println("IllegalArgumentException: " + e.getMessage() + "Radius has been set to 1");
+            }
+            if(e.getMessage().equals("theta")){
+                setTheta(1.0);
+                System.err.println("IllegalArgumentException: " + e.getMessage() + "theta has been set to 1");
+            }
+            if(e.getMessage().equals("phi")){
+                setPhi(1.0);
+                System.err.println("IllegalArgumentException: " + e.getMessage() + "phi has been set to 1");
+            }
+        }
         return this;
     }
 
-    public double getCentralAngle(Coordinate c) {
+    public double getCentralAngle(Coordinate c) throws IllegalArgumentException {
+        SphericCoordinate sp0 = new SphericCoordinate();
+        SphericCoordinate sp1 = new SphericCoordinate();
         //Precondition
         assert (c != null);
-        assert c.assertClassInvariants();
+        assertClassInvariants();
 
-        SphericCoordinate sp0 = this.asSphericCoordinate();
-        SphericCoordinate sp1 = c.asSphericCoordinate();
+
+        try {
+            sp0 = this.asSphericCoordinate();
+            sp1 = c.asSphericCoordinate();
+        }
+        catch (ArithmeticException e){
+            System.err.println("ArithmeticException: " + e.getMessage());
+            e.printStackTrace();
+        }
 
         double latitude1 = Math.PI - sp0.getTheta();
         double longitude1 = sp0.getPhi();
@@ -97,7 +146,6 @@ public class SphericCoordinate extends AbstractCoordinate {
         //Postcondition, ClassInvariants
         assert (result > -Math.PI / 2);
         assert (result < Math.PI / 2);
-        assert assertClassInvariants();
 
         return result;
     }
@@ -105,15 +153,37 @@ public class SphericCoordinate extends AbstractCoordinate {
     public void readFrom(ResultSet rset) throws SQLException,IllegalArgumentException {
         //Precondition
         if(rset == null) throw new IllegalArgumentException();
-        CartesianCoordinate cc = new CartesianCoordinate(rset.getDouble("x"), rset.getDouble("y"), rset.getDouble("z"));
+        try {
+            CartesianCoordinate cc = new CartesianCoordinate(rset.getDouble("x"), rset.getDouble("y"), rset.getDouble("z"));
 
-        SphericCoordinate sc = cc.asSphericCoordinate();
-        this.setTheta(sc.getTheta());
-        this.setPhi(sc.getPhi());
-        this.setRadius(sc.getRadius());
-
+            SphericCoordinate sc = cc.asSphericCoordinate();
+            this.setTheta(sc.getTheta());
+            this.setPhi(sc.getPhi());
+            this.setRadius(sc.getRadius());
+        }
+        catch(ArithmeticException e){
+            System.err.println("SQLException: " + e.getMessage());
+            e.printStackTrace();
+        }
         //Postcondition, ClassInvariant
-        assert assertClassInvariants();
+
+        try{
+            assertClassInvariants();
+        }
+        catch (IllegalArgumentException e){
+            if(e.getMessage().equals("radius")){
+                setRadius(1.0);
+                System.err.println("IllegalArgumentException: " + e.getMessage() + "Radius has been set to 1");
+            }
+            if(e.getMessage().equals("theta")){
+                setTheta(1.0);
+                System.err.println("IllegalArgumentException: " + e.getMessage() + "theta has been set to 1");
+            }
+            if(e.getMessage().equals("phi")){
+                setPhi(1.0);
+                System.err.println("IllegalArgumentException: " + e.getMessage() + "phi has been set to 1");
+            }
+        }
     }
 
     @Override

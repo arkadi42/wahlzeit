@@ -11,26 +11,28 @@ public abstract class AbstractCoordinate implements Coordinate, Persistent {
     //Maximum Distance between 2 cartesian coordinates to still be considered equal
     protected final double EPSILON = 0.01;
 
-    public abstract boolean assertClassInvariants();
+    public abstract void assertClassInvariants();
 
     //returns a equivalent cartesian coordinate
     public abstract CartesianCoordinate asCartesianCoordinate();
 
+    //return a equivalent spherical coordiante
+    public abstract SphericCoordinate asSphericCoordinate() throws ArithmeticException;
+
+
     //returns the cartesian distance to a coordinate
-    public double getCartesianDistance(Coordinate c){
+    public double getCartesianDistance(Coordinate c) throws IllegalArgumentException{
         return this.asCartesianCoordinate().getCartesianDistance(c);
     }
 
-    //return a equivalent spherical coordiante
-    public abstract SphericCoordinate asSphericCoordinate();
 
     //computes the central angle between two points on a sphere by using the Vincenty formula
-    public double getCentralAngle(Coordinate c) {
+    public double getCentralAngle(Coordinate c) throws IllegalArgumentException {
         return this.asSphericCoordinate().getCentralAngle(c);
     }
 
     public boolean isEqual(Coordinate c){
-        assert assertClassInvariants();
+        assertClassInvariants();
         return((this == c) || (getCartesianDistance(c) < EPSILON));
     }
 
@@ -50,14 +52,15 @@ public abstract class AbstractCoordinate implements Coordinate, Persistent {
     public void writeOn(ResultSet rset) throws SQLException, IllegalArgumentException {
         //Precondition
         if(rset == null) throw new IllegalArgumentException();
-        assert assertClassInvariants();
+        assertClassInvariants();
 
         CartesianCoordinate cc = this.asCartesianCoordinate();
+
         rset.updateDouble("x", cc.getX());
         rset.updateDouble("y", cc.getY());
         rset.updateDouble("z", cc.getZ());
 
-        assert assertClassInvariants();
+        assertClassInvariants();
     }
 
     @Override

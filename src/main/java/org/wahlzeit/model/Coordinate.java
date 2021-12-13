@@ -2,9 +2,9 @@ package org.wahlzeit.model;
 
 public interface Coordinate {
     CartesianCoordinate asCartesianCoordinate();
-    double getCartesianDistance(Coordinate c);
-    SphericCoordinate asSphericCoordinate();
-    double getCentralAngle(Coordinate c);
+    double getCartesianDistance(Coordinate c) throws IllegalArgumentException;
+    SphericCoordinate asSphericCoordinate() throws ArithmeticException;
+    double getCentralAngle(Coordinate c) throws IllegalArgumentException;
     boolean isEqual(Coordinate c);
-    boolean assertClassInvariants();
+    void assertClassInvariants() throws IllegalArgumentException;
 }
