@@ -8,9 +8,9 @@ import static org.junit.Assert.assertTrue;
 public class SphericCoordinateTest {
     @Test
     public void testDistance(){
-        CartesianCoordinate c3 = new CartesianCoordinate(5,12,13);
-        SphericCoordinate c4 = new SphericCoordinate( 1.176005207, 0.7853981634, 18.38477631);
-        SphericCoordinate c5 = c3.asSphericCoordinate();
+        Coordinate c3 = new CartesianCoordinate(5,12,13);
+        Coordinate c4 = new SphericCoordinate( 1.176005207, 0.7853981634, 18.38477631);
+        Coordinate c5 = c3.asSphericCoordinate();
 
         assertTrue(c5.equals(c4));
         assertTrue(c3.isEqual(c4));
@@ -20,12 +20,13 @@ public class SphericCoordinateTest {
         assertEquals(c4.asCartesianCoordinate().getX(), 5, 1e-3 );
 
         assertEquals(c3.getCartesianDistance(c4), 0, 1e-3);
+
     }
 
     @Test
     public void testAngle(){
         SphericCoordinate c1 = new SphericCoordinate(0.5, 0.5, -10);
-        CartesianCoordinate c2 = c1.asCartesianCoordinate();
+        Coordinate c2 = c1.asCartesianCoordinate();
 
         Coordinate c3 = new CartesianCoordinate(10,5,1);
         Coordinate c4 = c3.asSphericCoordinate();
