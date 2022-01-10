@@ -9,7 +9,6 @@ import java.sql.SQLException;
         patternName = "Abstract Factory",
         participants = {"PhotoFactory", "ConsolePhotoFactory"}
 )
-
 public class ConsolePhotoFactory extends PhotoFactory{
     @PatternInstance(
             patternName = "Singleton",
