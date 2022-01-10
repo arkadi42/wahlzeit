@@ -31,6 +31,10 @@ public abstract class AbstractCoordinate implements Coordinate, Persistent {
     public abstract Coordinate asSphericCoordinate() throws ArithmeticException;
 
 
+    @PatternInstance(
+            patternName = "TemplateMethod",
+            participants = {"AbstractCoordinate", "CartesianCoordinate", "SphericCoordinate"}
+    )
     //returns the cartesian distance to a coordinate
     public double getCartesianDistance(Coordinate c) throws IllegalArgumentException{
 
@@ -50,7 +54,10 @@ public abstract class AbstractCoordinate implements Coordinate, Persistent {
         return result;
     }
 
-
+    @PatternInstance(
+        patternName = "TemplateMethod",
+        participants = {"AbstractCoordinate", "CartesianCoordinate", "SphericCoordinate"}
+    )
     //computes the central angle between two points on a sphere by using the Vincenty formula
     public double getCentralAngle(Coordinate c) throws IllegalArgumentException {
         double latitude1 = Math.PI - this.getTheta();

@@ -5,7 +5,16 @@ import org.wahlzeit.services.SysLog;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@PatternInstance(
+        patternName = "Abstract Factory",
+        participants = {"PhotoFactory", "ConsolePhotoFactory"}
+)
+
 public class ConsolePhotoFactory extends PhotoFactory{
+    @PatternInstance(
+            patternName = "Singleton",
+            participants = {"ConsolePhotoFactory"}
+    )
     private static boolean isInitialized = false;
 
     public static synchronized PhotoFactory getInstance(){
