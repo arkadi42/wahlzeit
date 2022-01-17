@@ -57,7 +57,7 @@ public class ConsoleType extends DataObject {
         subTypes.add(ft);
     }
 
-    //returns true if ft is a subtype of this
+    //Goes through the subtypes recursively and returns true if ft is a subtype of this.
     public boolean isSubType(ConsoleType ft){
         if (subTypes.contains(ft)){
             return true;
