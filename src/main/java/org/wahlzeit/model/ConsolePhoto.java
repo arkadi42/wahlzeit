@@ -4,6 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ConsolePhoto extends Photo{
+    protected Console console;
+    protected ConsolePhotoManager manager;
+
     public ConsolePhoto() {
         id = PhotoId.getNextId();
         incWriteCount();
